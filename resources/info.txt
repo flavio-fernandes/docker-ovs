@@ -1,0 +1,75 @@
+
+Dave — Vagrant for VM that runs different flavors of OVS
+
+https://github.com/dave-tucker/docker-ovs
+
+git clone https://github.com/dave-tucker/docker-ovs.git docker-ovs.git
+
+[dhcp-89-53:flavio-docker-ovs.git]$ git diff
+
+customize:  https://gist.github.com/735c98dfc2ccfa76c016
+
+----
+
+## running tests from ovsdb.git
+
+mvn verify -Pintegrationtest -Pcoverage -Dovsdbserver.ipaddress=172.16.150.139 -Dovsdbserver.port=6640
+
+
+
+==
+
+Trying to debig IT… Madhu talks about, but I had no luck with it:
+
+http://maven.40175.n5.nabble.com/Debugging-Test-Cases-In-Eclipse-Some-Breakpoints-Hit-Some-Ignored-td138920.html
+
+
+## mvn verify -Pintegrationtest -Pcoverage -Dovsdbserver.ipaddress=172.16.150.139 -Dovsdbserver.port=6640 
+## -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5000
+----
+
+----
+
+vagrant up
+
+…
+
+vagrant ssh
+
+# pull Dave’s OVS’ in docker containers
+
+sudo docker pull davetucker/docker-ovs     <— needed once after first vagrant up
+
+sudo docker images
+
+# launch docker w/out shell access
+cid=$(sudo docker run -t -i -d -p 6640:6640 davetucker/docker-ovs:2.1.2 /usr/bin/supervisord)
+
+To tickle docker, use supervisord API:  http://supervisord.org/api.html
+
+sudo docker ps -l
+sudo docker ps -a
+sudo docker stop $cid
+sudo docker start $cid
+sudo docker inspect $cid
+sudo docker kill $cid
+sudo docker rm $cid
+
+# launch Docker with shell access
+sudo docker run -p 6640:6640 -p 9001:9001 -i -t davetucker/docker-ovs:2.1.2 /bin/sh
+
+# to enable supervisord, do this once, from shell
+export OVS_RUNDIR=/var/run/openvswitch
+sed -i s/nodaemon=true/nodaemon=false/g etc/supervisord.conf
+supervisord
+
+
+ovs-vsctl show
+ovsdb-client dump
+ovs-vsctl add-br br0
+
+
+
+
+
+
