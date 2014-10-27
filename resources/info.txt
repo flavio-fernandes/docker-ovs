@@ -16,7 +16,6 @@ customize:  https://gist.github.com/735c98dfc2ccfa76c016
 mvn verify -Pintegrationtest -Pcoverage -Dovsdbserver.ipaddress=192.168.50.4 -Dovsdbserver.port=6640
 
 
-
 ==
 
 Trying to debig IT… Madhu talks about, but I had no luck with it:
