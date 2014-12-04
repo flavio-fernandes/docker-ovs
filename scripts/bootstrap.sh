@@ -17,7 +17,7 @@ set -e
 
 if ! rpm -q epel-release > /dev/null; then
     echo "---> Installing EPEL"
-    su -c 'rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm'
+    su -c 'rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm'
 fi
 
 if [[ ! $(uname -r) =~ ^3. ]] ; then
@@ -70,6 +70,9 @@ if [ ! -d /tmp/supervisor-stdout ]; then
     tar xvf supervisor-stdout-0.1.1.tar.gz
     mv supervisor-stdout-0.1.1 supervisor-stdout
 fi
+
+echo "---> Yum Update"
+su -c "yum -q -y update"
 
 echo "---> Starting Docker"
 su -c 'service docker start > /dev/null'
